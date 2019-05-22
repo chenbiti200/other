@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+	</head>
+	<body>
+		<!--
+			路由传参:
+				1.通过params传参(参数显示在url上,安全性低)
+					:to=`/user/12345`
+					path: '/user/:num'
+					
+					12345==>:num 一一对应
+					
+					跳转路径展示为: /user/12345 	
+						12345是传递的参数
+						
+		-->
+		<div id="app">
+			 <h1>Hello App!</h1>
+			  <p>
+				<template v-for="item in msg">
+					<router-link :to=`/user/${item.num}`>Go to {{item.name}}</router-link>
+				</template>
+			</p>
+			<router-view></router-view>
+		</div>
+		
+		<script type="text/javascript">
+			// 1.定义两个组件
+			const Foo = { 
+				template: '<div>{{this.$route.params.num}}</div>' ,
+				watch: {
+					$route: function(n,o){
+						console.log("到路径: "+n.path);
+						console.log("从路径: "+o.path);
+					}
+				}
+			}
+			const Bar = { template: '<div>{{this.$route.params.num}}</div>' }
+			
+			// 2.配置路由表
+			const routes = [
+			  { path: '/user/:num', component: Foo },
+			  { path: '/user/:num', component: Bar }
+			]
+			
+			// 3.创建router实例
+			const router = new VueRouter({
+				routes // (缩写) 相当于 routes: routes(key为routes是固定的)
+			})
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: [
+						{name: "foo", num: 12345},
+						{name: "bar", num: 67890},
+					]
+				},
+				//4.注入路由
+				router
+			})
+			
+		</script>
+	</body>
+</html>

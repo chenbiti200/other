@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+			v指令:
+				v-bind:attr==>简写成 :attr  绑定属性
+				v-if:	条件判断
+				v-show: 条件判断
+				v-for:	循环
+				v-on:eventName:	事件绑定==>简写成 @click
+				v-model: 双向绑定
+				v-once:	单次绑定(无法响应多次)
+				v-slot: 插槽
+				v-html: 将html内容显示(如不加该指令,则显示字符串"<p>显示字符串</p>")
+		-->
+		<div id="app">
+			<img v-bind:src="imgUrl" alt="" v-bind:title="title" />
+			<!-- 可以简写成以下: -->
+			<img :src="imgUrl" alt="图片" :title="title" />
+			
+			<p v-if="show">Now, you see me!</p>
+			
+			<p v-if="status==200">请求成功</p>
+			<p v-else-if="status==404">页面找不到</p>
+			<p v-else-if="status==502">服务器错误</p>
+			<p v-else>联系运维</p>
+			<ul>
+				<li v-for="item in todoList">
+					{{item.time}} {{item.thing}}
+				</li>
+			</ul>
+			
+			<ul>
+				<!-- 前面的是元素,后面的是下标 -->
+				<li v-for="(val,ind) in part2">
+					{{ind}}-{{val}}
+				</li>
+			</ul>
+			
+			<button type="button" v-on:click="show=!show">点我</button>
+			<!-- 可以简写为以下 -->
+			<button type="button" @click="show=!show">点我</button>
+			
+			<input type="text" v-model="msg" />
+			{{msg}}
+			
+			<p v-show="show">Now, you see me!</p>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					imgUrl: "./static/logo.png",
+					title: "这是vue的logo",
+					status: 502,
+					show: false,
+					todoList: [
+						{time: "9:00", thing: "上课"},
+						{time: "12:00", thing: "吃饭"},
+						{time: "14:00", thing: "上课"},
+						{time: "18:00", thing: "吃饭"},
+						{time: "19:00", thing: "自习"}
+					],
+					part2: ["linux和git命令","模板引擎","模块化","webpack","sass","echart","vue"],
+					msg: "恭喜发财!"
+				}
+			})
+			
+		</script>
+	</body>
+</html>

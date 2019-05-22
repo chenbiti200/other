@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<input type="checkbox" id="checkall" v-model="checkall" /><label for="checkall">全选</label>
+			<ul>
+				<li v-for="opt in opts">
+					<input type="checkbox" name="" :id="opt.name" :value="opt" v-model="checkArr" />
+					<label :for="opt.name">{{opt.name}}</label>
+				</li>
+			</ul>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					checkall: false,
+					checkArr: [],
+					opts: [
+						{name: "篮球"},
+						{name: "足球"},
+						{name: "排球"},
+						{name: "棒球"},
+						{name: "网球"}
+					]
+				},
+				watch: {
+					checkall: function(val){
+						if(this.checkall){
+							this.checkArr = this.opts;	//全选时,复选框选中项与opts数组保持一致(即全选)
+						}else{
+							if(this.checkArr.length == this.opts.length){	//当复选框选中项与opts数组保持一致时(全部选中时,可以根据全选的勾选状态改变)
+								this.checkArr = [];		//取消选中时, 将复选框选中项清空(即全不选)
+							}
+						}
+					},
+					checkArr: function(val){
+						if(val.length == this.opts.length){	//监听如果选中项的长度与opts数组的长度保持一致时,将全选勾上
+							this.checkall = true;
+						}else{
+							this.checkall = false;		//否则取消全选的勾选
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

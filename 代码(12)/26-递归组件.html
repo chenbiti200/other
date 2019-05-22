@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<link rel="stylesheet" type="text/css" href="./static/font-awesome-4.7.0/css/font-awesome.css"/>
+		<style type="text/css">
+			ul,li{list-style: none;}
+			i{
+				color: #D89C15;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+			递归组件:
+				组件调用自己,实现树状展开图
+		-->
+		<div id="app">
+			<ul>
+				<child :model="model" v-for="model in mysource" :key="model.id"></child>
+			</ul>
+		</div>
+		
+		<template id="child">
+			<li>
+				<div @click="toggle">
+					<i v-if="isAFolder" class="fa " :class="[open? 'fa-folder-open':'fa-folder']"></i>
+					<i v-else="!isAFolder" class="fa fa-file-text"></i>
+					{{model.data.menuName}}
+				</div>
+				<ul v-show="open" v-if="isAFolder">
+					<child :model="item" v-for="item in model.childTreeNode" :key="item.id"></child>
+				</ul>
+			</li>
+		</template>
+		
+		<script type="text/javascript">
+			
+			var child = {
+				name: "child",	//组件必须拥有名字(模板名)
+				template: "#child",
+				props: ["model"],
+				data: function(){
+					return {
+						open: false		//判断是否已点击打开文件夹
+					}
+				},
+				computed: {
+					// 判断是否是一个文件夹(判断条件是拥有childTreeNode子节点且子节点长度不为0)--返回true或者false
+					isAFolder: function(){
+						return this.model.childTreeNode && this.model.childTreeNode.length
+					}
+				},
+				methods: {
+					//点击展开文件夹
+					toggle: function(){
+						this.open = !this.open
+					}
+				}
+			}
+			
+			// 渲染的数据
+			var data = [
+				{
+					"id": "1",
+					"data": {
+						"menuName": "part1",
+						"menuCode": "",
+					},
+					"childTreeNode": [{
+					"data": {
+						"menuName": "HTML-CSS",
+						"menuCode": "BusProject",
+					},
+					"childTreeNode": [
+						{
+							"data": {
+								"menuName": "HTML部分",
+								"menuCode": "BusProject",
+							},
+							"childTreeNode": [
+								{
+									"data": {
+										"menuName": "代码",
+										"menuCode": "BusProject",
+									},
+									"childTreeNode": []
+								},
+								{
+									"data": {
+										"menuName": "视频",
+										"menuCode": "BusProject",
+									},
+									"childTreeNode": []
+								}
+							]
+						},
+						{
+							"data": {
+								"menuName": "CSS部分",
+								"menuCode": "BusProject",
+							},
+							"childTreeNode": [{
+								"data": {
+									"menuName": "代码",
+									"menuCode": "BusProject",
+								},
+								"childTreeNode": []
+							}]
+						}
+					]
+				}, {
+					"data": {
+						"menuName": "我的任务",
+						"menuCode": "BusProject",
+					},
+					"childTreeNode": [{
+						"data": {
+							"menuName": "项目1",
+							"menuCode": "BusProject",
+						},
+						"childTreeNode": []
+					}]
+				}, {
+					"data": {
+						"menuName": "人员周报",
+						"menuCode": "BusProject",
+					},
+					"childTreeNode": []
+				}]
+				}, 
+				{
+					"id": "2",
+					"data": {
+						"menuName": "数据统计",
+						"menuCode": "BusClock",
+					},
+					"childTreeNode": []
+				},
+				{
+					"id": "3",
+					"data": {
+						"menuName": "人事管理",
+						"menuCode": "",
+					},
+					"childTreeNode": []
+				}, 
+				{
+					"id": "4",
+					"data": {
+						"menuName": "基础管理",
+						"menuCode": "",
+					},
+					"childTreeNode": [
+						{
+							"data": {
+								"menuName": "HTML-CSS",
+								"menuCode": "BusProject",
+							},
+							"childTreeNode": [
+								{
+									"data": {
+										"menuName": "HTML部分",
+										"menuCode": "BusProject",
+									},
+									"childTreeNode": [
+										{
+											"data": {
+												"menuName": "代码",
+												"menuCode": "BusProject",
+											},
+											"childTreeNode": []
+										},
+										{
+											"data": {
+												"menuName": "视频",
+												"menuCode": "BusProject",
+											},
+											"childTreeNode": []
+										}
+									]
+								},
+								{
+									"data": {
+										"menuName": "CSS部分",
+										"menuCode": "BusProject",
+									},
+									"childTreeNode": [{
+										"data": {
+											"menuName": "代码",
+											"menuCode": "BusProject",
+										},
+										"childTreeNode": []
+									}]
+								}
+							]
+						},
+						{
+							"data": {
+								"menuName": "我的任务",
+								"menuCode": "BusProject",
+							},
+							"childTreeNode": [{
+								"data": {
+									"menuName": "项目1",
+									"menuCode": "BusProject",
+								},
+								"childTreeNode": []
+							}]
+						}, 
+						{
+						"data": {
+							"menuName": "人员周报",
+							"menuCode": "BusProject",
+						},
+						"childTreeNode": []
+					}]
+				}
+			]
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					mysource: data
+				},
+				components: {child}
+			})
+			
+		</script>
+	</body>
+</html>

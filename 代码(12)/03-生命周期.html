@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			{{msg}}
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				// el: "#app",
+				data: {
+					msg: "好好学习"
+				},
+				beforeCreate: function() {
+					console.log("创建之前")
+				},
+				created: function() {
+					console.log("创建之后")
+				},
+				beforeMount: function() {
+					console.log("挂载之前")
+				},
+				mounted: function() {
+					console.log("挂载之后")
+				},
+				beforeUpdate: function() {
+					console.log("更新之前")
+				},
+				updated: function() {
+					console.log("更新之后")
+				},
+				beforeDestroy: function() {
+					console.log("销毁之前")
+				},
+				destroyed: function() {
+					console.log("销毁之后")
+				},
+			}).$mount("#app")	//可在最后面写挂载
+			
+		</script>
+	</body>
+</html>

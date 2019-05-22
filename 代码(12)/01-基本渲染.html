@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<p>{{msg}}</p>
+		</div>
+		<!-- {{msg}}--不会显示数据,必须写在挂载节点里面 -->
+		
+		<script type="text/javascript">
+			
+			// 1. 通过new建立vue实例,vue.js文件暴露出一个Vue构造函数(参数接收一个对象)
+			var vm = new Vue({
+				el: "#app",		//挂载节点
+				data: {
+					msg: "Hello Vue!"
+				}
+			})
+			
+		</script>
+	</body>
+</html>

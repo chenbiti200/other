@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+			子传父:
+				1.子组件模板中有一个点击事件触发aa函数:
+					template: `<div @click="aa">我是子组件2</div>`,
+				2.aa函数里面,通过this.$emit发射一个信号,这个信号发往bb事件, 发送的消息是子组件里面的数据
+					aa: function(){
+						this.$emit("bb",this.childmsg);
+					}
+				3.bb事件触发cc函数
+					<child2 @bb="cc"></child2>
+				4.父组件cc函数,接收来自子组件发送的消息
+					cc: function(mymsg){
+						console.log(mymsg);
+					}
+		-->
+		<div id="app">
+			<my-child :parentinfo="info"></my-child>
+			<child2 @bb="cc"></child2>
+			{{mymsg}}
+		</div>
+		
+		<script type="text/javascript">
+			// 定义第一个子组件(data必须是一个函数, 且返回一个对象)
+			var child1 = {
+				template: `<div>我是子组件1{{parentinfo}}</div>`,
+				props: ["parentinfo"],
+				data: function(){	
+					return {
+						msg: "恭喜发大财!"
+					}
+				}
+			}
+			// 定义第二个子组件
+			var child2 = {
+				template: `<div @click="aa">我是子组件2</div>`,
+				data: function(){
+					return {
+						childmsg: "来自子组件的消息"
+					}
+				},
+				methods: {
+					aa: function(){
+						this.$emit("bb",this.childmsg);
+					}
+				}
+			}
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					info: "我是来自父组件的消息",
+					mymsg: ""
+				},
+				methods: {
+					cc: function(mymsg){
+						this.mymsg = mymsg;
+					}
+				},
+				components: {"myChild": child1, child2}
+			})
+			
+		</script>
+	</body>
+</html>

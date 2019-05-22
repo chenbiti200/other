@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<style type="text/css">
+			a{margin-right: 20px;}
+			.active{
+				color: #ff6700;
+			}
+			.box1, .box2{
+				width: 300px;
+				height: 150px;
+				border: 1px solid #ccc;
+				border-radius: 20px;
+			}
+			/* .fade, .fade-leave-active{
+				transition: opacity .2s;
+			} */
+			
+			/* 定义新元素进来之前是透明度为0, 旧元素离开之后透明度是0 */
+			/* .fade-enter, .fade-leave-to { 
+				opacity: 0;
+			} */
+			.fade-enter-active {
+			  transition: all .3s ease;
+			}
+			.fade-leave-active {
+			  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+			}
+			.fade-enter, .fade-leave-to
+			/* .slide-fade-leave-active for below version 2.1.8 */ {
+			  transform: translateX(10px);
+			  background: red;
+			  opacity: 0;
+			}
+			
+			.customappear{
+				background: red;
+				transform: translateX(10px);
+			}
+			.customappearto{
+				background: yellow;
+			}
+			.customappearactive{
+				transition: all .5s;
+				color: #0000FF;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+		-->
+		<div id="app">
+			<div class="title">
+				<a href="#" @click="bb=item" v-for="item in tabs" :class="{'active': bb==item}">{{item.title}}</a>
+			</div>
+			<!-- <transition name="fade" mode="out-in">
+				<component :is="aa" :bb="bb"></component>
+			</transition> -->
+			<transition
+				appear
+				appear-class="customappear"
+				appear-to-class="customappearto"
+				appear-active-class="customappearactive"
+			>
+				<component :is="aa" :bb="bb"></component>
+			</transition>
+		</div>
+		
+		<template id="child1">
+			<div class="box1">
+				{{bb.content}}
+			</div>
+		</template>
+		
+		<template id="child2">
+			<div class="box2">
+				{{bb.content}}
+			</div>
+		</template>
+		
+		<script type="text/javascript">
+			var child1 = {
+				name: "child1",
+				template: "#child1",
+				props: ["bb"],
+				destroyed: function(){
+					console.log("child1销毁了");
+				}
+			}
+			var child2 = {
+				name: "child2",
+				template: "#child2",
+				props: ["bb"],
+				destroyed: function(){
+					console.log("child2销毁了");
+				}
+			}
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					tabs: [
+						{title: "Posts", content: "abcdefg"},
+						{title: "Archive", content: [1,2,3,4,5,6]}
+					],
+					bb: ""
+				},
+				watch: {
+					// 当前点击的tab
+					bb: function(val){
+						console.log(val); //{title: "Posts", content: "abcdefg"}||{title: "Archive", content: [1,2,3,4,5,6]}
+					}
+				},
+				components: {child1, child2},
+				computed: {
+					// 当前显示的tab
+					aa: function(){
+						if(this.bb.title == "Posts"){
+							return "child1";
+						}else{
+							return "child2"
+						}
+					}
+				},
+				created: function(){
+					this.bb = this.tabs[0]
+				}
+			})
+			
+		</script>
+	</body>
+</html>

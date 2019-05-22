@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<style>
+			html,body,a{margin: 0; padding: 0;}
+			h2{
+				height: 500px;
+				background: lightblue;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+			导航守卫:
+				完整的导航解析流程
+					导航被触发。
+					在失活的组件里调用离开守卫。
+					调用全局的 beforeEach 守卫。
+					在重用的组件里调用 beforeRouteUpdate 守卫 (2.2+)。
+					在路由配置里调用 beforeEnter。
+					解析异步路由组件。
+					在被激活的组件里调用 beforeRouteEnter。
+					调用全局的 beforeResolve 守卫 (2.5+)。
+					导航被确认。
+					调用全局的 afterEach 钩子。
+					触发 DOM 更新。
+					用创建好的实例调用 beforeRouteEnter 守卫中传给 next 的回调函数。
+
+				全局导航守卫
+					三个钩子:
+						beforeEach(to, from, next)	--每个路由进入之前触发
+							to: 路由到哪里去
+							from: 路由从哪里离开
+							next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+						afterEach(to,from)			--每个路由进入之后触发
+							to: 路由到哪里去
+							from: 路由从哪里离开
+						beforeResolve(to,from,next)	--在全局路由确认之前(各组件解析之后)
+							to: 路由到哪里去
+							from: 路由从哪里离开
+							next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+				组件导航守卫
+				路由独享守卫
+		
+		-->
+		<div id="app">
+			<template v-for="item in msg">
+				<router-link :to="item">{{item | fn}}</router-link>
+			</template>
+			<router-view></router-view>
+		</div>
+		
+		<script type="text/javascript">
+			// 1.定义三个组件
+			var film = {
+				template: "<h2>电影首页</h2>"
+			}
+			var me = {
+				template: "<h2>个人中心</h2>"
+			}
+			var login = {
+				template: "<h2>登录页面</h2>"
+			}
+			
+			// 2.配置路由表
+			var aa = [
+				{path: "/film", name:"电影", component: film},
+				{path: "/me", name:"个人中心", component: me},
+				{path: "/login", name:"登录", component: login}
+			]
+			
+			// 3.实例化VueRouter
+			var bb = new VueRouter({
+				routes: aa
+			})
+			
+			// 全局导航守卫
+			bb.beforeEach((to, from, next)=>{
+				// console.log("从"+from.path+"离开");
+				// console.log("到"+to.path+"去");
+				if(to.path !== "/me"){
+					next();		//放行
+				}else{
+					next("/login");		//流放到其他地方
+				}
+			})
+			
+			bb.beforeResolve((to,from,next)=>{
+				console.log(to.name);
+				console.log(from);
+				next();		//如果调用了beforeResolve,但未允许next,则无法进入到相应页面
+			})
+			
+			bb.afterEach((to,from)=>{
+				// console.log(to);
+				// console.log("从"+from.path+"离开");
+				// console.log("到"+to.path+"去");
+				// confirm("你真的要离开"+from.name+"页面了吗?");
+			})
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: ["film","me","login"]
+				},
+				//4.注入到vue实例
+				router: bb,
+				filters: {
+					fn: val=>{
+						switch(val){
+							case "film": return "电影";
+							break;
+							case "me": return "个人中心";
+							break;
+							case "login": return "登录";
+							break;
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

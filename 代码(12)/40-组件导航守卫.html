@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<style>
+			html,body,a{margin: 0; padding: 0;}
+			#app>div{
+				height: 500px;
+				background: lightblue;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+			导航守卫:
+				完整的导航解析流程
+					导航被触发。
+					在失活的组件里调用离开守卫。
+					调用全局的 beforeEach 守卫。
+					在重用的组件里调用 beforeRouteUpdate 守卫 (2.2+)。
+					在路由配置里调用 beforeEnter。
+					解析异步路由组件。
+					在被激活的组件里调用 beforeRouteEnter。
+					调用全局的 beforeResolve 守卫 (2.5+)。
+					导航被确认。
+					调用全局的 afterEach 钩子。
+					触发 DOM 更新。
+					用创建好的实例调用 beforeRouteEnter 守卫中传给 next 的回调函数。
+
+				全局导航守卫
+					三个钩子:
+						beforeEach(to, from, next)	--每个路由进入之前触发
+							to: 路由到哪里去
+							from: 路由从哪里离开
+							next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+						afterEach(to,from)			--每个路由进入之后触发
+							to: 路由到哪里去
+							from: 路由从哪里离开
+						beforeResolve(to,from,next)	--在全局路由确认之前(各组件解析之后)
+							to: 路由到哪里去
+							from: 路由从哪里离开
+							next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+							
+				组件导航守卫
+					beforeRouteEnter:	--路由进入之前
+						to: 路由到哪里去
+						from: 路由从哪里离开
+						next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+					beforeRouteLeave:	--路由离开之前
+						to: 路由到哪里去
+						from: 路由从哪里离开
+						next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+					beforeRouteUpdate:	--路由更新之前(作用于有动态参数的路由)
+					
+				路由独享守卫
+					beforeEnter(to, from, next)		--进入该路由之前触发(如: 进入该页面之前进行判断是否已登录)
+						to: 路由到哪里去
+						from: 路由从哪里离开
+						next: 函数(参数决定是否要展示即将进入的页面,还是重定向到其他页面)
+		
+		-->
+		<div id="app">
+			<template v-for="item in msg">
+				<router-link :to="{name: '登录', params: {num: Math.ceil(Math.random()*10)}}">跳转</router-link>
+			</template>
+			<keep-alive>
+				<router-view></router-view>
+			</keep-alive>
+		</div>
+		
+		<script type="text/javascript">
+			// 1.定义三个组件
+			var film = {
+				template: "<h2>电影首页</h2>",
+				beforeRouteLeave: (to, from, next)=>{
+					console.log("你要从"+from.name+"离开了");
+					next();
+				}
+			}
+			var me = {
+				template: "<h2>个人中心</h2>",
+				beforeRouteEnter: (to, from, next)=>{
+					console.log("从"+from.name+"来");
+					console.log("到"+to.name+"去");
+					if(localStorage.getItem("login")){
+						next();
+					}else{
+						next("/login");
+					}
+				}
+			}
+			var login = {
+				template: `
+					<div>
+						<h2>登录页面</h2>
+						<input type="text" v-model="username" placeholder="请输入用户名" />
+						<input type="password" v-model="pwd" placeholder="请输入密码" />
+						<button @click="login">登录</button>
+					</div>
+				`,
+				data: function(){
+					return {
+						username: "",
+						pwd: "",
+					}
+				},
+				beforeRouteUpdate(to,from,next){
+					console.log("路由更新之前");
+					next()
+				},
+				methods: {
+					login: function(){
+						if(this.username.trim() && this.pwd.trim()){
+							localStorage.setItem("login", true);	//设置本地存储
+							this.$router.push({name: "电影"});
+						}
+					}
+				}
+			}
+			
+			// 2.配置路由表
+			var aa = [
+				/*{path: "/film", name:"电影", component: film},
+				{path: "/me", name:"个人中心", component: me},*/
+				{path: "/login/:num", name:"登录", component: login}
+			]
+			
+			// 3.实例化VueRouter
+			var bb = new VueRouter({
+				routes: aa
+			})
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: [
+						{name: "电影", path: "film"},
+						{name: "个人中心", path: "me"},
+						{name: "登录", path: "login"},
+					],
+					num: 1
+				},
+				//4.注入到vue实例
+				router: bb,
+				filters: {
+					fn: val=>{
+						switch(val){
+							case "film": return "电影";
+							break;
+							case "me": return "个人中心";
+							break;
+							case "login": return "登录";
+							break;
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<style>
+			li{
+				width: 400px;
+				display: flex;
+				justify-content: space-around;
+				align-items: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<ul>
+				<li v-for="(item,ind) in goodsList">
+					<span>{{item.name}}</span>
+					<p>
+						<button type="button" @click="minusProd(item)">-</button>
+						<span>{{item.num}}</span>
+						<button type="button" @click="addProd(item)">+</button>
+					</p>
+					<span>{{item.price}}</span>
+				</li>
+			</ul>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					goodsList: [
+						{name: "电冰箱", num: 0, price: 3000},
+						{name: "电磁炉", num: 0, price: 300},
+						{name: "微波炉", num: 0, price: 600},
+						{name: "电饭煲", num: 0, price: 280}
+					] 
+				},
+				methods: {
+					// 绑定数量添加事件(将每个产品当做参数传进来再进行数量改变)
+					addProd: function(item){
+						item.num++
+					},
+					minusProd: function(item){
+						if(item.num>0){
+							item.num--;
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

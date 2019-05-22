@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+			定义一个变量, 里面的格式与Vue实例一致, 在Vue实例里面通过mixins引用以上变量,
+			则变量里面的内容可以混入到Vue实例中
+			当Vue实例里面定义的内容与变量中的一致时, 优先Vue实例
+		
+		-->
+		<div id="app">
+			{{msg}} {{info}} {{mymsg}}
+			<child1>
+				<template v-slot:message>
+					1234567890
+				</template>
+			</child1>
+			<child2></child2>
+		</div>
+		
+		<template id="child1">
+			<div>
+				{{msg}}{{info}}
+				<slot name="message"></slot>
+			</div>
+		</template>
+		<template id="child2">
+			<div>
+				{{msg}}{{info}}
+			</div>
+		</template>
+		
+		<script type="text/javascript">
+			// Vue实例的混入(data是一个对象)
+			var aa = {
+				data: {
+					msg: "恭喜发财",
+					info: "You got an info from mixin",
+					mymsg: ""
+				},
+				watch: {
+					msg: function(val){
+						this.mymsg =  val.split("").reverse().join("");
+					}
+				}
+			}
+			
+			// 组件的混入(data是函数)--需要与混入的组件格式一致
+			var bb = {
+				data: function(){
+					return {
+						msg: "恭喜发财",
+						info: "You got an info from mixin",
+						mymsg: ""
+					}
+				}
+			}
+			
+			var child1 = {
+				template: "#child1",
+				data: function(){
+					return {
+						msg: "child1"
+					}
+				},
+				mixins: [bb]
+			}
+			
+			var child2 = {
+				template: "#child2",
+				data: function(){
+					return {
+						msg: "child2"
+					}
+				},
+				mixins: [bb]
+			}
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: "好运来"
+				},
+				mixins: [aa],
+				watch: {
+					msg: function(val){
+						this.mymsg = val.charAt(0);
+					}
+				},
+				components: {child1,child2}
+			})
+			
+		</script>
+	</body>
+</html>

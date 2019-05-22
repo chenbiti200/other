@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+			渲染时不通过template模板渲染,而是使用render渲染函数进行渲染
+			render: function(AA){	//AA是渲染函数的形参,是一个函数	ƒ (a, b, c, d) { return createElement(vm, a, b, c, d, true); }
+				return AA(
+					"h"+this.level,	//h2(createElement("h2"))
+					this.$slots.default	//h2.innerHTML = 
+				)
+			}
+		-->
+		<div id="app">
+			<child :level="level">
+				我是level{{level}}
+			</child>
+		</div>
+		
+		<!-- <template id="child">
+			<h1 v-if="level==1">
+				<slot></slot>
+			</h1>
+			<h2 v-else-if="level==2">
+				<slot></slot>
+			</h2>
+			<h3 v-else-if="level==3">
+				<slot></slot>
+				<slot></slot>
+			</h3>
+			<h4 v-else-if="level==4">
+			</h4>
+			<h5 v-else-if="level==5">
+				<slot></slot>
+			</h5>
+			<h6 v-else-if="level==6">
+				<slot></slot>
+			</h6>
+		</template> -->
+		
+		<script type="text/javascript">
+			var child = {
+				// template: "#child",
+				props: ["level"],
+				render: function(AA){
+					return AA(
+						"h"+this.level,	//h2(createElement("h2"))
+						this.$slots.default	//h2.innerHTML = 
+					)
+				}
+			}
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					level: 1
+				},
+				components: {child}
+			})
+			
+		</script>
+	</body>
+</html>

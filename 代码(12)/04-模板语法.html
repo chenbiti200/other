@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+			网站安全问题:
+				XSS攻击: 用户在你的网页上插入攻击代码
+					--怎么预防?	--对用户输入信息进行过滤
+			
+			v-html: 
+				一定是对自己信任的数据进行代码显示(避免用户动态输入)
+		-->
+		<div id="app">
+			<!-- 单次绑定 -->
+			<p v-once>{{msg}}</p>
+			
+			<input type="text" name="" id="" v-model="msg" />
+			
+			<!-- 插入code -->
+			<div v-html="myCode"></div>
+			<div>{{myCode}}</div>
+			
+			<!-- 简单的js表达式 -->
+			<p>{{msg.split("").reverse().join("")}}</p>
+			<p>{{num>100? "大于100":"不大于100"}}</p>
+			<p>{{num+100}}</p>
+			
+			<!-- 动态参数 -->
+			<button v-bind:[attrname]="btntype" v-on:[eventtype]="num=50">{{eventtype}}</button>
+			
+			<!-- 修饰符
+				.enter 指的是按下enter键(可以直接指定keycode13)
+				.prevent 指的是阻止默认事件(event.preventDefault)
+			 -->
+			<textarea rows="10" name="" @keypress.enter.prevent="show"></textarea>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: "恭喜发财!",
+					num: 100,
+					attrname: "type",
+					btntype: "reset",
+					myCode: "<span>我是span</span>",
+					eventtype: "click"	//key必须小写
+				},
+				methods: {	//函数方法
+					show: function(){
+						console.log(666);
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<ul>
+				<li v-for="val in info">
+					<span>{{val.name}}</span>
+					<span>{{val.gender | fn}}</span>
+				</li>
+			</ul>
+			<p>{{msg | captalize}}</p>
+			<ul>
+				<li v-for="i in status">{{i | changeStatus}}</li>
+			</ul>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					info: [
+						{name: "小花", gender: 0},
+						{name: "小草", gender: 1},
+						{name: "小树", gender: 1},
+						{name: "小狗", gender: 1},
+						{name: "小猫", gender: 0}
+					],
+					msg: "kobe",
+					status: [0,1,2]
+				},
+				filters: {
+					fn: gender=>{
+						if(gender == 0){
+							return "女";
+						}else if(gender == 1){
+							return "男";
+						}
+					},
+					captalize: val=>{
+						if(!val) return ''
+						val = val.toString()
+						return val.charAt(0).toUpperCase() + val.substring(1)
+					},
+					changeStatus: val=>{
+						switch(val){
+							case 0: return "不重要"
+							break;
+							case 1: return "很重要"
+							break;
+							case 2: return "非常重要"
+							break;
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

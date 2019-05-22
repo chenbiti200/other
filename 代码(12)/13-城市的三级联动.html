@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="./static/city.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div id="app">
+			<select v-model="myProvince">
+				<option value ="">请选择</option>
+				<option v-for="item in allCities" :value ="item.name">{{item.name}}</option>
+			</select>
+			<select v-model="myCity">
+				<option value ="">请选择</option>
+				<option v-for="item in allCity" :value ="item.name">{{item.name}}</option>
+			</select>
+			<select v-model="myCounty">
+				<option value ="">请选择</option>
+				<option v-for="item in allCounty" :value ="item">{{item}}</option>
+			</select>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					allCities: allCities,
+					myProvince: "",		//选中的省
+					myCity: "",			//选中的市
+					myCounty: "",		//选中的区/县
+					allCity: ""	,		//选中的省里面的市
+					allCounty: ""		//选中的市里面的区/县
+				},
+				watch: {
+					myProvince: function(val){
+						for(var i=0; i<allCities.length; i++){
+							if(val == allCities[i].name){	//判断选中的省与数据里面的省是否对应,对应则加载相应的市
+								this.allCity = allCities[i].city;
+							}
+						}
+					},
+					myCity: function(val){
+						for(var j=0; j<this.allCity.length; j++){
+							if(val == this.allCity[j].name){	//判断选中的市与数据里面的市是否对应,对应则加载相应的县区
+								this.allCounty = this.allCity[j].area;
+							}
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

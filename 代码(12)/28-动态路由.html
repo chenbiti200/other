@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			 <h1>Hello App!</h1>
+			  <p>
+				<template v-for="item in msg">
+					<router-link :to="item">Go to {{item}}</router-link>
+				</template>
+			</p>
+			<router-view></router-view>
+		</div>
+		
+		<script type="text/javascript">
+			// 1.定义两个组件
+			const Foo = { template: '<div>foo</div>' }
+			const Bar = { template: '<div>bar</div>' }
+			
+			// 2.配置路由表
+			const routes = [
+			  { path: '/foo', component: Foo },
+			  { path: '/bar', component: Bar }
+			]
+			
+			// 3.创建router实例
+			const router = new VueRouter({
+				routes // (缩写) 相当于 routes: routes(key为routes是固定的)
+			})
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: ["foo","bar"]
+				},
+				//4.注入路由
+				router
+			})
+			
+		</script>
+	</body>
+</html>

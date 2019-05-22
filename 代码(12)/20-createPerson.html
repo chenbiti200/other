@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<div id="app">
+			<child1></child1>
+			<child2></child2>
+		</div>
+		
+		<template id="child1">
+			<div>
+				<p>
+					Name: 
+					<input type="text" v-model="name" />
+				</p>
+				<p>
+					Age: 
+					<input type="text" v-model="age" />
+				</p>
+				<p>
+					Gender: 
+					<select name="gender" v-model="gender">
+						<option value="男">男</option>
+						<option value="女">女</option>
+					</select>
+				</p>
+				<button type="button" @click="add">Create</button>
+			</div>
+		</template>
+		<template id="child2">
+			<div>
+				<table border="1" cellspacing="0" cellpadding="5">
+					<tr>
+						<th>Name</th>
+						<th>Age</th>
+						<th>Gender</th>
+						<th>Delete</th>
+					</tr>
+					<tr v-for="(item,index) in person">
+						<td>{{item.name}}</td>
+						<td>{{item.age}}</td>
+						<td>{{item.gender}}</td>
+						<td><button type="button" @click="del(index)">Delete</button></td>
+					</tr>
+				</table>
+			</div>
+		</template>
+		
+		<script type="text/javascript">
+			var bus = new Vue();
+			
+			var child1 = {
+				template: "#child1",
+				data: function(){
+					return {
+						name: "",
+						age: "",
+						gender: ""
+					}
+				},
+				methods: {
+					add: function(){
+						var obj = {name: this.name, age: this.age, gender: this.gender};
+						bus.$emit("addOne", obj);
+					}
+				}
+			}
+			
+			var child2 = {
+				template: "#child2",
+				data: function(){
+					return {
+						person: []
+					}
+				},
+				mounted: function(){
+					bus.$on("addOne", val=>{
+						this.person.push(val);
+					})
+				},
+				methods: {
+					del: function(ind){
+						this.person.splice(ind, 1);
+					}
+				}
+			}
+			var vm = new Vue({
+				el: "#app",
+				components: {child1, child2}
+			})
+			
+		</script>
+	</body>
+</html>

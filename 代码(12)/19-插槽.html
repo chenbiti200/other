@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+			插槽:(v-slot是2.6.0版本出现的, 最好写在template标签上)
+				匿名插槽和具名插槽
+				使用时, 匿名插槽指定为default
+					<template v-slot:default>
+						<p>{{liu}}</p>
+					</template>
+				具名插槽使用时,需要指定插槽的名字					
+				<template v-slot:footer>
+					<footer>我是footer</footer>
+				</template>
+		-->
+		<div id="app">
+			<my-child :parentinfo="info">
+				<template v-slot:footer>
+					<footer>我是footer</footer>
+				</template>
+				<template v-slot:default>
+					<p>{{liu}}</p>
+				</template>
+				<template v-slot:header>
+					<h2>{{info}}</h2>
+				</template>
+			</my-child>	<!--烤串式写法-->
+		</div>
+		
+		<template id="child1">
+			<div>
+				<div>我是子组件1{{parentinfo}}</div>
+				<!-- //具名插槽 -->
+				<slot name="header"></slot>		
+				<!-- //匿名插槽 -->
+				<slot></slot>
+				<slot name="footer"></slot>
+			</div>
+		</template>
+		
+		<script type="text/javascript">
+			// 定义第一个子组件(data必须是一个函数, 且返回一个对象)
+			var child1 = {
+				template: "#child1",
+				props: ["parentinfo"],
+				data: function(){	
+					return {
+						msg: "恭喜发大财!"
+					}
+				}
+			}
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					info: "我是来自父组件的消息",
+					liu: "我是谁?"
+				},
+				components: {"myChild": child1}
+				
+			})
+			
+		</script>
+	</body>
+</html>

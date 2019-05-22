@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<input type="text" name="" v-model="msg" />
+			<textarea rows="2" cols="10" v-model="msg"></textarea>
+			
+			
+			<input type="radio" name="" id="one" value="one" v-model="radioModel" /><label for="one">one</label>
+			<input type="radio" name="" id="two" value="two" v-model="radioModel" /><label for="two">two</label>
+			<br />
+			<input type="checkbox" name=""  v-model="checkModel" id="basketball" value="basketball" />
+			<label for="basketball">basketball</label>
+			<input type="checkbox" name=""  v-model="checkModel" id="football" value="football" />
+			<label for="football">football</label>
+			<input type="checkbox" name=""  v-model="checkModel" id="baseball" value="baseball"/>
+			<label for="baseball">baseball</label>
+			
+			<select v-model="selectModel">
+				<option value ="sz">深圳</option>
+				<option value ="dg">东莞</option>
+				<option value ="gz">广州</option>
+			</select>
+			
+			<select v-model="multipleSelectModel" multiple="multiple">
+				<option value ="sz">深圳</option>
+				<option value ="dg">东莞</option>
+				<option value ="gz">广州</option>
+			</select>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: "web16",
+					radioModel: "",		//获取到单选框选中的值
+					checkModel: []	,	//复选框可以多选,所以是数组形式(获取到的是复选框选中的值)
+					selectModel: ""		,//获取到的是下拉框选中的值
+					multipleSelectModel: []
+				},
+				watch: {
+					radioModel: function(val){
+						console.log(val)
+					},
+					checkModel: function(val){
+						console.log(val)	//["football", "baseball", __ob__: Observer]
+					},
+					selectModel: function(val){
+						console.log(val)	
+					},
+					multipleSelectModel: function(val){
+						console.log(val)	
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

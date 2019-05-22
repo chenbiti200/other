@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<!--
+		
+			全局指令: 可在多个Vue实例里面使用
+			
+			局部指令: 仅可在定义该指令的Vue实例里面使用
+		
+		-->
+		<div id="app">
+			<input type="text" name="" id="" value="" v-model="msg" v-jujiao v-large v-reverse />
+			<p v-large v-reverse>我们是web16班, 要年薪百万!</p>
+		</div>
+		
+		<div id="main">
+			<p v-large v-reverse>我们是web16班, 要年薪百万!</p>
+		</div>
+		
+		<script type="text/javascript">
+			// 全局指令
+			Vue.directive("large", {
+				inserted: function(el){
+					el.style.height = "50px";
+				}
+			})
+			
+			var vm1 = new Vue({
+				el: "#main"
+			})
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					msg: "说点什么?"
+				},
+				// 局部指令
+				directives: {
+					// 定义聚焦指令
+					jujiao: {
+						inserted: function(el){
+							el.focus();
+						}
+					},
+					// 设置高度指令
+					large: {
+						inserted: function(el){
+							el.style.height = "50px";
+						}
+					},
+					// 定义反转指令
+					reverse: {
+						inserted: function(el){
+							if(el.value){
+								el.value = el.value.split("").reverse().join("");
+							}else if(el.innerHTML){
+								el.innerHTML = el.innerHTML.split("").reverse().join("");
+							}
+						}
+					}
+				}
+			})
+			
+		</script>
+	</body>
+</html>

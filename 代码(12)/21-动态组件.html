@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<style type="text/css">
+			a{margin-right: 20px;}
+			.active{
+				color: #ff6700;
+			}
+			.box1, .box2{
+				width: 300px;
+				height: 150px;
+				border: 1px solid #ccc;
+				border-radius: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<!--
+			<keep-alive> 包裹动态组件时，
+			会缓存不活动的组件实例，而不是销毁它们。
+			
+			不会触发destroyed钩子函数
+		-->
+		<div id="app">
+			<div class="title">
+				<a href="#" @click="bb=item" v-for="item in tabs" :class="{'active': bb==item}">{{item.title}}</a>
+			</div>
+			<keep-alive>
+				<component :is="aa" :bb="bb"></component>
+			</keep-alive>
+		</div>
+		
+		<template id="child1">
+			<div class="box1">
+				{{bb.content}}
+			</div>
+		</template>
+		
+		<template id="child2">
+			<div class="box2">
+				{{bb.content}}
+			</div>
+		</template>
+		
+		<script type="text/javascript">
+			var child1 = {
+				name: "child1",
+				template: "#child1",
+				props: ["bb"],
+				destroyed: function(){
+					console.log("child1销毁了");
+				}
+			}
+			var child2 = {
+				name: "child2",
+				template: "#child2",
+				props: ["bb"],
+				destroyed: function(){
+					console.log("child2销毁了");
+				},
+				created: function(){
+					console.log("child2被创建了");	//keep-alive之后, 只会创建一次
+				},
+				// keep-alive组件使用时才会生效(激活)
+				activated: function(){
+					console.log("child2被选中了");
+				},
+				// keep-alive组件使用时才会生效(移除)
+				deactivated: function(){
+					console.log("child2被移除了");
+				}
+			}
+			
+			var vm = new Vue({
+				el: "#app",		
+				data: {
+					tabs: [
+						{title: "Posts", content: "abcdefg"},
+						{title: "Archive", content: [1,2,3,4,5,6]}
+					],
+					bb: ""
+				},
+				watch: {
+					// 当前点击的tab
+					bb: function(val){
+						console.log(val); //{title: "Posts", content: "abcdefg"}||{title: "Archive", content: [1,2,3,4,5,6]}
+					}
+				},
+				components: {child1, child2},
+				computed: {
+					// 当前显示的tab
+					aa: function(){
+						if(this.bb.title == "Posts"){
+							return "child1";
+						}else{
+							return "child2"
+						}
+					}
+				},
+				created: function(){
+					this.bb = this.tabs[0]
+				}
+			})
+			
+		</script>
+	</body>
+</html>
